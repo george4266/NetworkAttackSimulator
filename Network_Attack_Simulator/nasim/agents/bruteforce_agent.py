@@ -41,6 +41,7 @@ def run_bruteforce_agent(env, step_limit=1e6, verbose=True):
     bool
         whether the goal was reached or not
     """
+    
     if verbose:
         print(LINE_BREAK)
         print("STARTING EPISODE")
