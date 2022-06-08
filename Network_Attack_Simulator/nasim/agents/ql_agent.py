@@ -27,6 +27,7 @@ for building your own agents and for simple experimental comparisons.
 """
 import random
 import numpy as np
+import pandas as pd
 from pprint import pprint
 
 import nasim
@@ -207,7 +208,7 @@ class TabularQLearningAgent:
         while not done and steps < step_limit:
             a = self.get_egreedy_action(s, self.get_epsilon())
 
-            next_s, r, done, _ = self.env.step(a)
+            next_s, r, done,  _ = self.env.step(a)
             self.steps_done += 1
             td_error, s_value = self.optimize(s, a, next_s, r, done)
             self.logger.add_scalar("td_error", td_error, self.steps_done)
@@ -216,6 +217,9 @@ class TabularQLearningAgent:
             s = next_s
             episode_return += r
             steps += 1
+            df.loc[len(df.index)] = [next_s, r, done, _]
+
+
 
         return episode_return, steps, self.env.goal_reached()
 
@@ -268,6 +272,7 @@ class TabularQLearningAgent:
 
 
 if __name__ == "__main__":
+    df = pd.DataFrame(columns=["Next State", "Reward", "Done","Other Inormation"])
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("env_name", type=str, help="benchmark scenario name")
@@ -307,3 +312,4 @@ if __name__ == "__main__":
     )
     ql_agent.train()
     ql_agent.run_eval_episode(render=args.render_eval)
+    df.to_csv("ql_out.csv")
