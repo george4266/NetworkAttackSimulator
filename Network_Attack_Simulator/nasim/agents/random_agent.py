@@ -12,7 +12,17 @@ To see available running arguments:
 $ python random_agent.py --help
 """
 
+
+"""
+My changes to code:
+
+When run, the output of the agent will all be made into a csv file.
+Have added more returns and added some additional information into the 
+command line output
+"""
+
 import numpy as np
+import pandas as pd
 
 import nasim
 
@@ -20,6 +30,7 @@ LINE_BREAK = "-"*60
 
 
 def run_random_agent(env, step_limit=1e6, verbose=True):
+    count=0
     if verbose:
         print(LINE_BREAK)
         print("STARTING EPISODE")
@@ -34,11 +45,14 @@ def run_random_agent(env, step_limit=1e6, verbose=True):
 
     while not done and t < step_limit:
         a = env.action_space.sample()
-        _, r, done, _ = env.step(a)
+        x, r, done, _ = env.step(a)
         total_reward += r
         if (t+1) % 100 == 0 and verbose:
             print(f"{t}: {total_reward}")
         t += 1
+
+        count+=1
+        df.loc[len(df.index)] = [t, total_reward, done, x, _]
 
     if done and verbose:
         print(LINE_BREAK)
@@ -54,10 +68,16 @@ def run_random_agent(env, step_limit=1e6, verbose=True):
     if done:
         done = env.goal_reached()
 
-    return t, total_reward, done
+    
+    
+
+    return t, total_reward, done,count
+    
 
 
 if __name__ == "__main__":
+
+    df = pd.DataFrame(columns=['steps','rewards', 'done', 'topology?','agent knows?'])
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("env_name", type=str,
@@ -84,7 +104,8 @@ if __name__ == "__main__":
                                    not args.partially_obs,
                                    not args.param_actions,
                                    not args.box_obs)
-        steps, reward, done = run_random_agent(env, verbose=False)
+        steps, reward, done, count = run_random_agent(env, verbose=False)
+        
         run_steps.append(steps)
         run_rewards.append(reward)
         run_goals += int(done)
@@ -95,6 +116,11 @@ if __name__ == "__main__":
             print(f"\tSteps = {steps}")
             print(f"\tReward = {reward}")
             print(f"\tGoal reached = {done}")
+    print(LINE_BREAK)
+    print("Number of runs",count)
+
+    
+    df.to_csv("random_out.csv")
 
     run_steps = np.array(run_steps)
     run_rewards = np.array(run_rewards)
@@ -106,3 +132,5 @@ if __name__ == "__main__":
     print(f"Mean rewards = {run_rewards.mean():.2f} "
           f"+/- {run_rewards.std():.2f}")
     print(f"Goals reached = {run_goals} / {args.runs}")
+
+
