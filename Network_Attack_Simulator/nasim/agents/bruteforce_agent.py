@@ -14,6 +14,8 @@ $ python bruteforce_agent.py --help
 """
 
 from itertools import product
+import pandas as pd
+
 
 import nasim
 
@@ -72,12 +74,13 @@ def run_bruteforce_agent(env, step_limit=1e6, verbose=True):
                 act = next(act_iter)
                 cycle_complete = True
 
-        _, rew, done, _ = env.step(act)
+        _, rew, done, x = env.step(act)
         total_reward += rew
 
         if cycle_complete and verbose:
             print(f"{steps}: {total_reward}")
         steps += 1
+        df.loc[len(df.index)] = [_, total_reward,done, x]
 
     if done and verbose:
         print(LINE_BREAK)
@@ -98,6 +101,8 @@ def run_bruteforce_agent(env, step_limit=1e6, verbose=True):
 
 
 if __name__ == "__main__":
+    df = pd.DataFrame(columns=["Topology?", "Total Reward", "done", "Actions"])
+
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("env_name", type=str, help="benchmark scenario name")
@@ -123,3 +128,6 @@ if __name__ == "__main__":
     else:
         print(nasimenv.action_space.nvec)
     run_bruteforce_agent(nasimenv)
+
+
+    df.to_csv("bruteforce_out.csv")
