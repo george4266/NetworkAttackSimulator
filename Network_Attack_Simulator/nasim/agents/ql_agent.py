@@ -1,34 +1,26 @@
 """An example Tabular, epsilon greedy Q-Learning Agent.
-
 This agent does not use an Experience replay (see the 'ql_replay_agent.py')
-
 It uses pytorch 1.5+ tensorboard library for logging (HINT: these dependencies
 can be installed by running pip install nasim[dqn])
-
 To run 'tiny' benchmark scenario with default settings, run the following from
 the nasim/agents dir:
-
 $ python ql_agent.py tiny
-
 To see detailed results using tensorboard:
-
 $ tensorboard --logdir runs/
-
 To see available hyperparameters:
-
 $ python ql_agent.py --help
-
 Notes
 -----
-
 This is by no means a state of the art implementation of Tabular Q-Learning.
 It is designed to be an example implementation that can be used as a reference
 for building your own agents and for simple experimental comparisons.
 """
 import random
 import numpy as np
-import pandas as pd
 from pprint import pprint
+import pandas as pd 
+
+
 
 import nasim
 
@@ -54,7 +46,7 @@ class TabularQFunction:
 
     def forward(self, x):
         if isinstance(x, np.ndarray):
-            x = str(x.astype(np.int))
+            x = str(x.astype(np.int64)) #causing issue. 
         if x not in self.q_func:
             self.q_func[x] = np.zeros(self.num_actions, dtype=np.float32)
         return self.q_func[x]
@@ -156,7 +148,7 @@ class TabularQLearningAgent:
         s_value = q_vals_raw.max()
         return td_error, s_value
 
-    def train(self):
+    def train(self): # used in the main function
         if self.verbose:
             print("\nStarting training")
 
@@ -190,6 +182,9 @@ class TabularQLearningAgent:
                 print(f"\treturn = {ep_return}")
                 print(f"\tgoal = {goal}")
 
+            temp = self.steps_done / self.training_steps
+            df1.loc[len(df1.index)] = [num_episodes,temp, ep_return, goal]
+
         self.logger.close()
         if self.verbose:
             print("Training complete")
@@ -198,7 +193,7 @@ class TabularQLearningAgent:
             print(f"\treturn = {ep_return}")
             print(f"\tgoal = {goal}")
 
-    def run_train_episode(self, step_limit):
+    def run_train_episode(self, step_limit): 
         s = self.env.reset()
         done = False
 
@@ -208,7 +203,7 @@ class TabularQLearningAgent:
         while not done and steps < step_limit:
             a = self.get_egreedy_action(s, self.get_epsilon())
 
-            next_s, r, done,  _ = self.env.step(a)
+            next_s, r, done, _ = self.env.step(a)
             self.steps_done += 1
             td_error, s_value = self.optimize(s, a, next_s, r, done)
             self.logger.add_scalar("td_error", td_error, self.steps_done)
@@ -217,13 +212,10 @@ class TabularQLearningAgent:
             s = next_s
             episode_return += r
             steps += 1
-            df.loc[len(df.index)] = [next_s, r, done, _]
 
+        return episode_return, steps, self.env.goal_reached() 
 
-
-        return episode_return, steps, self.env.goal_reached()
-
-    def run_eval_episode(self,
+    def run_eval_episode(self, #also used in the main function
                          env=None,
                          render=False,
                          eval_epsilon=0.05,
@@ -246,7 +238,7 @@ class TabularQLearningAgent:
 
         while not done:
             a = self.get_egreedy_action(s, eval_epsilon)
-            next_s, r, done, _ = env.step(a)
+            next_s, r, done, Actions = env.step(a)
             s = next_s
             episode_return += r
             steps += 1
@@ -262,17 +254,23 @@ class TabularQLearningAgent:
 
                 if done:
                     print("\n" + line_break)
-                    print("EPISODE FINISHED")
                     print(line_break)
                     print(f"Goal reached = {env.goal_reached()}")
                     print(f"Total steps = {steps}")
                     print(f"Total reward = {episode_return}")
+        
+            df2.loc[len(df2.index)] = [episode_return, r, steps, Actions]
+        return episode_return, steps, env.goal_reached() #The data I use of the second DataFrame
 
-        return episode_return, steps, env.goal_reached()
 
 
 if __name__ == "__main__":
-    df = pd.DataFrame(columns=["Next State", "Reward", "Done","Other Inormation"])
+    #[num_episodes,temp, ep_return, goal]
+    df1 = pd.DataFrame(columns=["ep_return","steps","episode_return","goal_reached"])
+    #[episode_return, r, steps, _, topology]
+    df2 = pd.DataFrame(columns=["reward","diff_in_reward","steps", "Actions"])
+
+    
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("env_name", type=str, help="benchmark scenario name")
@@ -311,5 +309,7 @@ if __name__ == "__main__":
         env, verbose=args.quite, **vars(args)
     )
     ql_agent.train()
+    df1 = df1.to_csv("Q-l agent_out_1.csv")
     ql_agent.run_eval_episode(render=args.render_eval)
-    df.to_csv("ql_out.csv")
+    df2=df2.to_csv("Q-l agent_out_2.csv")
+

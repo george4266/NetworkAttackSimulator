@@ -1,0 +1,3 @@
+The following folders are some outputs I saved for analysis. Code is slowly being added to
+for the agents to output some .csv files and fix any depreciation issues that exist in 
+the code. 
