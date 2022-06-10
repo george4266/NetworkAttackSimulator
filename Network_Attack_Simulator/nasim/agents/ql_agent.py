@@ -46,7 +46,7 @@ class TabularQFunction:
 
     def forward(self, x):
         if isinstance(x, np.ndarray):
-            x = str(x.astype(np.int64)) #causing issue. 
+            x = str(x.astype(np.int64)) #no more depreciation errors now :D
         if x not in self.q_func:
             self.q_func[x] = np.zeros(self.num_actions, dtype=np.float32)
         return self.q_func[x]
@@ -150,7 +150,7 @@ class TabularQLearningAgent:
 
     def train(self): # used in the main function
         if self.verbose:
-            print("\nStarting training")
+            print("_______")
 
         num_episodes = 0
         training_steps_remaining = self.training_steps
@@ -296,6 +296,7 @@ if __name__ == "__main__":
                         help="(default=0.99)")
     parser.add_argument("--quite", action="store_false",
                         help="Run in Quite mode")
+
     args = parser.parse_args()
 
     env = nasim.make_benchmark(
@@ -308,8 +309,23 @@ if __name__ == "__main__":
     ql_agent = TabularQLearningAgent(
         env, verbose=args.quite, **vars(args)
     )
+    from rich import print as rprint
+    from rich.panel import Panel
+    from rich.columns import Columns
+
+
+    
+    rprint("[red]Starting...[/red]")
     ql_agent.train()
+
     df1 = df1.to_csv("Q-l agent_out_1.csv")
+    rprint(Panel("Q-l agent_out_1.csv [cyan]|[/cyan] [yellow]Created![/yellow]"))
+
     ql_agent.run_eval_episode(render=args.render_eval)
+    rprint(Panel("Q-l agent_out_2.csv [cyan]|[/cyan] [yellow]Created![/yellow]"))
     df2=df2.to_csv("Q-l agent_out_2.csv")
+    rprint("[bold green] Success!! [/bold green]")
+
+    
+    
 
