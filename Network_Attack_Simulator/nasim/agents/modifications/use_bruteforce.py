@@ -1,0 +1,1 @@
+# TODO: make bruteforce agent into a more class structure
