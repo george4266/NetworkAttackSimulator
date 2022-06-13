@@ -335,6 +335,9 @@ if __name__ == "__main__":
 
     rprint("DATAFRAME 2"+"\n",df2)
 
+    rprint("Mode:", df2["Actions"].mode())
+    rprint("Number of mode values:", df2["Actions"].value_counts().max())
+
     
     fig = px.scatter_3d(df2, x="reward", y="diff_in_reward", z = "steps", color="diff_in_reward", title= "3D Scatter showing Difference in Rewards between Rounds", symbol="diff_in_reward", opacity=0.7, template="simple_white")
 
