@@ -338,14 +338,19 @@ if __name__ == "__main__":
     rprint("Mode:", df2["Actions"].mode())
     rprint("Number of mode values:", df2["Actions"].value_counts().max())
 
-    df2["Actions"] = df2["Actions"].astype("string")
+    df2["Actions"] = df2["Actions"].astype("string") #.py won't work if it isn't a string
     rprint("[purple]Converted required elements to strings...[/purple]")
 
 
    
     fig1 = px.scatter_3d(df2, x="reward", y="diff_in_reward", z = "steps", color="diff_in_reward", title= "3D Scatter showing Difference in Rewards between Rounds", symbol="diff_in_reward", opacity=0.7, template="simple_white")
 
-    fig2 = px.scatter_3d(df2, x="reward", y="diff_in_reward", z="steps", color="Actions", symbol="Actions", opacity=0.7, template="simple_white")
+    fig2 = px.scatter_3d(df2, x="reward", y="diff_in_reward", z="steps", color="Actions", symbol="Actions", opacity=0.7, template="simple_white", hover_data={
+    
+    "reward" : False,
+    "diff_in_reward" : False,
+    "steps": True,
+    "Actions" : False})
 
 
     fig1.show()
