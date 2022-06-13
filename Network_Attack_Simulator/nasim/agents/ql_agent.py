@@ -19,6 +19,10 @@ import random
 import numpy as np
 from pprint import pprint
 import pandas as pd 
+import plotly.express as px
+import numpy as np
+import plotly.graph_objects as go
+ 
 
 
 
@@ -318,14 +322,38 @@ if __name__ == "__main__":
     rprint("[red]Starting...[/red]")
     ql_agent.train()
 
-    df1 = df1.to_csv("Q-l agent_out_1.csv")
+    df1.to_csv("Q-l agent_out_1.csv")
     rprint(Panel("Q-l agent_out_1.csv [cyan]|[/cyan] [yellow]Created![/yellow]"))
 
     ql_agent.run_eval_episode(render=args.render_eval)
     rprint(Panel("Q-l agent_out_2.csv [cyan]|[/cyan] [yellow]Created![/yellow]"))
-    df2=df2.to_csv("Q-l agent_out_2.csv")
+    df2.to_csv("Q-l agent_out_2.csv")
     rprint("[bold green] Success!! [/bold green]")
 
+    #DATAFRAME 2 is more important but will print both
+    rprint("DATAFRAME 1"+"\n",df1)
+
+    rprint("DATAFRAME 2"+"\n",df2)
+
     
+    fig = px.scatter_3d(df2, x="reward", y="diff_in_reward", z = "steps", color="diff_in_reward", title= "3D Scatter showing Difference in Rewards between Rounds", symbol="diff_in_reward", opacity=0.7, template="simple_white")
+
+    fig.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
+
+
 
