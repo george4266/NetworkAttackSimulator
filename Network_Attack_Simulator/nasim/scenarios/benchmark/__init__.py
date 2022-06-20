@@ -26,7 +26,7 @@ AVAIL_STATIC_BENCHMARKS = {
     "small": {
         "file": osp.join(BENCHMARK_DIR, "small.yaml"),
         "name": "small",
-        "step_limit": 1000,
+        "step_limit": 5000, #test for convergence
         "max_score": 186
     },
     "small-honeypot": {

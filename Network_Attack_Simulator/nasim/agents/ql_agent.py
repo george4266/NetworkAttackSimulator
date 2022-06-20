@@ -81,7 +81,7 @@ class TabularQLearningAgent:
                  env,
                  seed=None,
                  lr=0.001,
-                 training_steps=10000,
+                 training_steps=20000,
                  final_epsilon=0.05,
                  exploration_steps=10000,
                  gamma=0.99,
@@ -351,6 +351,14 @@ if __name__ == "__main__":
     "diff_in_reward" : False,
     "steps": True,
     "Actions" : False})
+
+
+    fig2.update_layout(legend=dict(
+    yanchor="top",
+    y=0.99,
+    xanchor="left",
+    x=0.01
+))
 
 
     fig1.show()
