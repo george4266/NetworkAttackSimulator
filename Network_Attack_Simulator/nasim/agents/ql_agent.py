@@ -81,9 +81,9 @@ class TabularQLearningAgent:
                  env,
                  seed=None,
                  lr=0.001,
-                 training_steps=20000,
-                 final_epsilon=0.05,
-                 exploration_steps=10000,
+                 training_steps=2500,
+                 final_epsilon=0.1,
+                 exploration_steps=2500,
                  gamma=0.99,
                  verbose=True,
                  **kwargs):
@@ -118,7 +118,7 @@ class TabularQLearningAgent:
         )
         self.discount = gamma
         self.training_steps = training_steps
-        self.steps_done = 0
+        self.steps_done = 0 #variable to be searched for steps_done
 
         # Q-Function
         self.qfunc = TabularQFunction(self.num_actions)
