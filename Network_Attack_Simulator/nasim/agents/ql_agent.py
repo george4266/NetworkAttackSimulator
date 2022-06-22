@@ -80,7 +80,7 @@ class TabularQLearningAgent:
     def __init__(self,
                  env,
                  seed=None,
-                 lr=0.001,
+                 lr=0.002,
                  training_steps=2500,
                  final_epsilon=0.1,
                  exploration_steps=2500,
@@ -111,7 +111,7 @@ class TabularQLearningAgent:
 
         # Training related attributes
         self.lr = lr
-        self.exploration_steps = exploration_steps
+        self.exploration_steps = 2500
         self.final_epsilon = final_epsilon
         self.epsilon_schedule = np.linspace(
             1.0, self.final_epsilon, self.exploration_steps
@@ -282,19 +282,19 @@ if __name__ == "__main__":
                         help="Renders final policy")
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
-    parser.add_argument("-t", "--training_steps", type=int, default=10000,
+    parser.add_argument("-t", "--training_steps", type=int, default=50000,
                         help="training steps (default=10000)")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="(default=32)")
     parser.add_argument("--seed", type=int, default=0,
                         help="(default=0)")
-    parser.add_argument("--replay_size", type=int, default=100000,
+    parser.add_argument("--replay_size", type=int, default=200000,
                         help="(default=100000)")
     parser.add_argument("--final_epsilon", type=float, default=0.05,
                         help="(default=0.05)")
     parser.add_argument("--init_epsilon", type=float, default=1.0,
                         help="(default=1.0)")
-    parser.add_argument("-e", "--exploration_steps", type=int, default=10000,
+    parser.add_argument("-e", "--exploration_steps", type=int, default=50000,
                         help="(default=10000)")
     parser.add_argument("--gamma", type=float, default=0.99,
                         help="(default=0.99)")
