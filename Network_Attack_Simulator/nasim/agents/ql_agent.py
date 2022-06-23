@@ -22,6 +22,9 @@ import pandas as pd
 import plotly.express as px
 import numpy as np
 import plotly.graph_objects as go
+from rich import print as rprint
+from rich.panel import Panel
+from rich.columns import Columns
  
 
 
@@ -178,13 +181,14 @@ class TabularQLearningAgent:
             self.logger.add_scalar(
                 "episode_goal_reached", int(goal), self.steps_done
             )
-
-            if num_episodes % 10 == 0 and self.verbose:
+            
+            if num_episodes % 50 == 0 and self.verbose:
                 print(f"\nEpisode {num_episodes}:")
                 print(f"\tsteps done = {self.steps_done} / "
                       f"{self.training_steps}")
                 print(f"\treturn = {ep_return}")
                 print(f"\tgoal = {goal}")
+                
 
             temp = self.steps_done / self.training_steps
             df1.loc[len(df1.index)] = [num_episodes,temp, ep_return, goal]
@@ -246,6 +250,7 @@ class TabularQLearningAgent:
             s = next_s
             episode_return += r
             steps += 1
+
             if render:
                 print("\n" + line_break)
                 print(f"Step {steps}")
@@ -263,7 +268,8 @@ class TabularQLearningAgent:
                     print(f"Total steps = {steps}")
                     print(f"Total reward = {episode_return}")
         
-            df2.loc[len(df2.index)] = [episode_return, r, steps, Actions]
+            #df2.loc[len(df2.index)] = [episode_return, r, steps, Actions]
+            
         return episode_return, steps, env.goal_reached() #The data I use of the second DataFrame
 
 
@@ -272,7 +278,7 @@ if __name__ == "__main__":
     #[num_episodes,temp, ep_return, goal]
     df1 = pd.DataFrame(columns=["ep_return","steps","episode_return","goal_reached"])
     #[episode_return, r, steps, _, topology]
-    df2 = pd.DataFrame(columns=["reward","diff_in_reward","steps", "Actions"])
+    #df2 = pd.DataFrame(columns=["reward","diff_in_reward","steps", "Actions"])
 
     
     import argparse
@@ -282,19 +288,19 @@ if __name__ == "__main__":
                         help="Renders final policy")
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
-    parser.add_argument("-t", "--training_steps", type=int, default=100000,
+    parser.add_argument("-t", "--training_steps", type=int, default=1000000,
                         help="training steps (default=10000)")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="(default=32)")
     parser.add_argument("--seed", type=int, default=0,
                         help="(default=0)")
-    parser.add_argument("--replay_size", type=int, default=500000,
+    parser.add_argument("--replay_size", type=int, default=5000000,
                         help="(default=100000)")
     parser.add_argument("--final_epsilon", type=float, default=0.05,
                         help="(default=0.05)")
     parser.add_argument("--init_epsilon", type=float, default=1.0,
                         help="(default=1.0)")
-    parser.add_argument("-e", "--exploration_steps", type=int, default=100000,
+    parser.add_argument("-e", "--exploration_steps", type=int, default=1000000,
                         help="(default=10000)")
     parser.add_argument("--gamma", type=float, default=0.99,
                         help="(default=0.99)")
@@ -313,9 +319,7 @@ if __name__ == "__main__":
     ql_agent = TabularQLearningAgent(
         env, verbose=args.quite, **vars(args)
     )
-    from rich import print as rprint
-    from rich.panel import Panel
-    from rich.columns import Columns
+
 
 
     
@@ -327,52 +331,56 @@ if __name__ == "__main__":
 
     ql_agent.run_eval_episode(render=args.render_eval)
     rprint(Panel("Q-l agent_out_2.csv [cyan]|[/cyan] [yellow]Created![/yellow]"))
-    df2.to_csv("Q-l agent_out_2.csv")
+    #df2.to_csv("Q-l agent_out_2.csv")
     rprint("[bold green] Success! [/bold green]")
 
     #DATAFRAME 2 is more important but will print both
     rprint("DATAFRAME 1"+"\n",df1)
 
-    rprint("DATAFRAME 2"+"\n",df2)
+    #rprint("DATAFRAME 2"+"\n",df2)
 
-    rprint("Mode:", df2["Actions"].mode())
-    rprint("Number of mode values:", df2["Actions"].value_counts().max())
+    #rprint("Mode:", df2["Actions"].mode())
+    #rprint("Number of mode values:", df2["Actions"].value_counts().max())
 
-    df2["Actions"] = df2["Actions"].astype("string") #.py won't work if it isn't a string
+    #df2["Actions"] = df2["Actions"].astype("string") #.py won't work if it isn't a string
     rprint("[purple]Converted required elements to strings...[/purple]")
+    fig4 = px.line(df1, x="ep_return",y="episode_return", labels = dict(ep_return = "Episode #", episode_return="Rewards"))
+    fig4.show()
+
 
 
    
-    fig1 = px.scatter_3d(df2, x="reward", y="diff_in_reward", z = "steps", color="diff_in_reward", title= "3D Scatter showing Difference in Rewards between Rounds", symbol="diff_in_reward", opacity=0.7, template="simple_white")
+    #fig1 = px.scatter_3d(df2, x="reward", y="diff_in_reward", z = "steps", color="diff_in_reward", title= "3D Scatter showing Difference in Rewards between Rounds", symbol="diff_in_reward", opacity=0.7, template="simple_white")
 
-    fig2 = px.scatter_3d(df2, x="reward", y="diff_in_reward", z="steps", color="Actions", symbol="Actions", opacity=0.7, template="simple_white", hover_data={
+    #fig2 = px.scatter_3d(df2, x="reward", y="diff_in_reward", z="steps", color="Actions", symbol="Actions", opacity=0.7, template="simple_white", hover_data={
     
-    "reward" : False,
+"""    "reward" : False,
     "diff_in_reward" : False,
     "steps": True,
     "Actions" : False})
-
-    fig3 = px.line(df2, x= "steps", y="reward")
-
-
-    fig2.update_layout(legend=dict(
+"""
+    #fig3 = px.line(df2, x= "steps", y="reward")
+    
+"""    fig2.update_layout(legend=dict(
     yanchor="top",
     y=0.99,
     xanchor="left",
     x=0.01
-))
+))"""
 
 
-    """
+"""
     Using plotly the figures will appear on a web browser from
     your local host,
 
     No need for wifi to display beautiful, interactive graphs :D
     """
 
-    fig1.show() #3d scatter showind difference in points earned
+"""    fig1.show() #3d scatter showind difference in points earned
     fig2.show() #3d scatter showing differences in actions
-    fig3.show() #line chart
+    fig3.show() #line chart of DataFrame 2"""
+
+    
 
 
 
