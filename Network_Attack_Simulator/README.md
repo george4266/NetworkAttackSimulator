@@ -25,6 +25,11 @@ The brute force agents uses a .ipynb file to find the most common action taken. 
 
 This agent had the most analysis. After the creation of the DataFrame I put the data into a google sheet. I then used google colab to generate correlation analysis and 3d scatter plots using plotly. 
 
+## Running to Convergence
+
+The Ql-agent had modifications at the argparser parts of the file in order to run until convergence. Link to that below:
+https://docs.google.com/presentation/d/19eq2pHNGtTJ7_RPbyYcsolIyzGA5ClMpNC-lz7pfYq0/edit#slide=id.g134b413c3ff_0_0 
+
 -----
 
 ## Changes to .yaml files 
