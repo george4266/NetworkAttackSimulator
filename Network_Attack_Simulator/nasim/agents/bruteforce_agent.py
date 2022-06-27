@@ -59,7 +59,12 @@ def run_bruteforce_agent(env, step_limit=1e6, verbose=True):
     if env.flat_actions:
         act = 0
     else:
+        """
+        act_iter: the value that iterates the action_num_val taken by
+        the brute force agent. 
+        """
         act_iter = product(*[range(n) for n in env.action_space.nvec])
+        print(act_iter)
 
     while not done and steps < step_limit:
         if env.flat_actions:
@@ -73,6 +78,7 @@ def run_bruteforce_agent(env, step_limit=1e6, verbose=True):
                 act_iter = product(*[range(n) for n in env.action_space.nvec])
                 act = next(act_iter)
                 cycle_complete = True
+    
 
         _, rew, done, x = env.step(act)
         total_reward += rew
@@ -80,7 +86,10 @@ def run_bruteforce_agent(env, step_limit=1e6, verbose=True):
         if cycle_complete and verbose:
             print(f"{steps}: {total_reward}")
         steps += 1
-        df.loc[len(df.index)] = [_, total_reward,done, x]
+        
+        df.loc[len(df.index)] = [_, total_reward,done, x, act]
+    
+   
 
     if done and verbose:
         print(LINE_BREAK)
@@ -101,7 +110,7 @@ def run_bruteforce_agent(env, step_limit=1e6, verbose=True):
 
 
 if __name__ == "__main__":
-    df = pd.DataFrame(columns=["Topology?", "Total Reward", "done", "Actions"])
+    df = pd.DataFrame(columns=["Topology?", "Total Reward", "done", "Actions", "Action_num_val"])
 
     import argparse
     parser = argparse.ArgumentParser()
