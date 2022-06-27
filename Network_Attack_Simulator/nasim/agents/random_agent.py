@@ -21,6 +21,7 @@ Have added more returns and added some additional information into the
 command line output
 """
 
+from sre_constants import SUCCESS
 import numpy as np
 import pandas as pd
 from rich import print as rprint
@@ -186,3 +187,4 @@ if __name__ == "__main__":
 
     fig.update_layout(hovermode ="x")
     fig.show()
+
