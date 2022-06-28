@@ -53,7 +53,7 @@ class TabularQFunction:
 
     def forward(self, x):
         if isinstance(x, np.ndarray):
-            x = str(x.astype(np.int64)) #no more depreciation errors now :D
+            x = str(x.astype(np.int32)) #no more depreciation errors now :D
         if x not in self.q_func:
             self.q_func[x] = np.zeros(self.num_actions, dtype=np.float32)
         return self.q_func[x]

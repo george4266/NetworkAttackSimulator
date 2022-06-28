@@ -28,6 +28,8 @@ for building your own agents and for simple experimental comparisons.
 """
 import random
 from pprint import pprint
+import pandas as pd
+import plotly.express as px
 
 import numpy as np
 
@@ -86,7 +88,7 @@ class TabularQFunction:
 
     def forward(self, x):
         if isinstance(x, np.ndarray):
-            x = str(x.astype(np.int))
+            x = str(x.astype(np.int32)) #no more depreciations here too
         if x not in self.q_func:
             self.q_func[x] = np.zeros(self.num_actions, dtype=np.float32)
         return self.q_func[x]
@@ -230,6 +232,8 @@ class TabularQLearningAgent:
                 print(f"\treturn = {ep_return}")
                 print(f"\tgoal = {goal}")
 
+            episode_df.loc[len(episode_df.index)] = [num_episodes, ep_results, ep_return, goal]
+
         self.logger.close()
         if self.verbose:
             print("Training complete")
@@ -260,6 +264,7 @@ class TabularQLearningAgent:
             o = next_o
             episode_return += r
             steps += 1
+            df1.loc[len(df1.index)] = [steps, a, r, done, _, episode_return]
 
         return episode_return, steps, self.env.goal_reached()
 
@@ -312,6 +317,14 @@ class TabularQLearningAgent:
 
 
 if __name__ == "__main__":
+    #[steps, a, r, done, _, episode_return]
+    df1 = pd.DataFrame(columns= ["steps", "action_num_val", "reward", "done", "action", "episode_return"])
+    
+
+    #[num_episodes, ep_results, ep_return, goal]
+    episode_df = pd.DataFrame(columns = ["episode", "results", "return", "goal"])
+    
+
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("env_name", type=str, help="benchmark scenario name")
@@ -349,3 +362,8 @@ if __name__ == "__main__":
     )
     ql_agent.train()
     ql_agent.run_eval_episode(render=args.render_eval)
+
+
+    print("Creating DataFrames")
+    df1.to_csv("ql_replay_out.csv")
+    episode_df.to_csv("episdoe_ql_replay.csv")
