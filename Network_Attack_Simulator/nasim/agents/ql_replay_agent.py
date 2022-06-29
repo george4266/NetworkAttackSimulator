@@ -332,19 +332,19 @@ if __name__ == "__main__":
                         help="Renders final policy")
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
-    parser.add_argument("-t", "--training_steps", type=int, default=10000,
+    parser.add_argument("-t", "--training_steps", type=int, default=100000,
                         help="training steps (default=10000)")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="(default=32)")
     parser.add_argument("--seed", type=int, default=0,
                         help="(default=0)")
-    parser.add_argument("--replay_size", type=int, default=100000,
+    parser.add_argument("--replay_size", type=int, default=1000000,
                         help="(default=100000)")
     parser.add_argument("--final_epsilon", type=float, default=0.05,
                         help="(default=0.05)")
     parser.add_argument("--init_epsilon", type=float, default=1.0,
                         help="(default=1.0)")
-    parser.add_argument("--exploration_steps", type=int, default=10000,
+    parser.add_argument("--exploration_steps", type=int, default=100000,
                         help="(default=10000)")
     parser.add_argument("--gamma", type=float, default=0.99,
                         help="(default=0.99)")
