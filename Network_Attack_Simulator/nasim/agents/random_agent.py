@@ -35,7 +35,7 @@ import nasim
 LINE_BREAK = "-"*60
 
 
-def run_random_agent(env, step_limit=1e6, verbose=True):
+def run_random_agent(env, step_limit=1e12, verbose=True):
     count=0
     if verbose:
         print(LINE_BREAK)
@@ -113,7 +113,7 @@ if __name__ == "__main__":
                                    not args.box_obs)
 
         #appending data                       
-        steps, reward, done, count = run_random_agent(env, verbose=False)
+        steps, reward, done, count = run_random_agent(env, verbose=False,step_limit=1e12)
         
         run_steps.append(steps)
         run_rewards.append(reward)
@@ -186,5 +186,6 @@ if __name__ == "__main__":
     fig = px.line(df, x="steps", y="rewards")
 
     fig.update_layout(hovermode ="x")
+    fig.update_layout(title="Random Agent")
     fig.show()
 

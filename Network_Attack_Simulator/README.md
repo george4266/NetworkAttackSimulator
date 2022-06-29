@@ -12,6 +12,7 @@ So far there are three files that have had these modifications. As the list belo
  - random_agent.py
  - bruteforce_agent.py
  - ql_agent.py
+ - ql_replay_agent.py
 
 
 ### Random and Brute Force Agents
@@ -30,6 +31,12 @@ This agent had the most analysis. After the creation of the DataFrame I put the 
 The Ql-agent had modifications at the argparser parts of the file in order to run until convergence. Link to that below:
 https://docs.google.com/presentation/d/19eq2pHNGtTJ7_RPbyYcsolIyzGA5ClMpNC-lz7pfYq0/edit#slide=id.g134b413c3ff_0_0 
 
+
+----
+### QL Replay Agent
+
+Agent was run until convergence and DataFrames were created. 
+
 -----
 
 ## Changes to .yaml files 
@@ -46,3 +53,8 @@ Added a "my_network.yaml" file to play around with agents in my own custom envir
 
 ### /scenarios/benchmark/yaml_test and yaml_mod
 An attempt to make a class file to create changes to any yaml file. I found this to be too  repetitive so I didn't invest more time into it... 
+
+-----
+## IPYNB folder
+
+In order to better analyze the output from the RL agents, I have a subfolder within the nasim/agents folder. These python notebooks are to give visual aid and correlation analysis to the outputted .csv files. This means that the analysis does not have to be within the agent file as was the case when I made my original modifications the the ql_agent.py file. 
