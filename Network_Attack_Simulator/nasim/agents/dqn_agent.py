@@ -367,7 +367,7 @@ if __name__ == "__main__":
                         help="(default=[64. 64])")
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
-    parser.add_argument("-t", "--training_steps", type=int, default=100000,
+    parser.add_argument("-t", "--training_steps", type=int, default=1000,
                         help="training steps (default=20000)")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="(default=32)")
@@ -375,7 +375,7 @@ if __name__ == "__main__":
                         help="(default=1000)")
     parser.add_argument("--seed", type=int, default=0,
                         help="(default=0)")
-    parser.add_argument("--replay_size", type=int, default=100000,
+    parser.add_argument("--replay_size", type=int, default=20000,
                         help="(default=100000)")
     parser.add_argument("--final_epsilon", type=float, default=0.05,
                         help="(default=0.05)")
