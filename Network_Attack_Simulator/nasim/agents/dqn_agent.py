@@ -27,6 +27,8 @@ import random
 import numpy as np
 from gym import error
 from pprint import pprint
+import pandas as pd
+
 
 import nasim
 
@@ -110,7 +112,7 @@ class DQNAgent:
                  env,
                  seed=None,
                  lr=0.001,
-                 training_steps=20000,
+                 training_steps=20000, 
                  batch_size=32,
                  replay_size=10000,
                  final_epsilon=0.05,
@@ -287,6 +289,8 @@ class DQNAgent:
             episode_return += r
             steps += 1
 
+            df_ep.loc[len(df_ep)] = [next_o, r, done, _, episode_return, steps]
+
         return episode_return, steps, self.env.goal_reached()
 
     def run_eval_episode(self,
@@ -316,6 +320,7 @@ class DQNAgent:
             o = next_o
             episode_return += r
             steps += 1
+            df_out.loc[df_out.index] = [episode_return, steps, o, r, _]
             if render:
                 print("\n" + line_break)
                 print(f"Step {steps}")
@@ -333,12 +338,24 @@ class DQNAgent:
                     print(f"Goal reached = {env.goal_reached()}")
                     print(f"Total steps = {steps}")
                     print(f"Total reward = {episode_return}")
+  
 
         return episode_return, steps, env.goal_reached()
 
 
 if __name__ == "__main__":
     import argparse
+
+    """
+    DataFrame Creation
+    """
+    #  df_ep.loc[len(df_ep)] = [next_o, r, done, _, episode_return, steps]
+    df_ep = pd.DataFrame(columns=["next_o", "reward",
+    "done", "action", "episode_return", "steps"])
+    #  df_out.loc[df_out.index] = [episode_return, steps, o, r, _]
+    df_out = pd.DataFrame(columns=["episode_return", "steps", "o", "reward", "actions"])
+
+
     parser = argparse.ArgumentParser()
     parser.add_argument("env_name", type=str, help="benchmark scenario name")
     parser.add_argument("--render_eval", action="store_true",
@@ -350,7 +367,7 @@ if __name__ == "__main__":
                         help="(default=[64. 64])")
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
-    parser.add_argument("-t", "--training_steps", type=int, default=20000,
+    parser.add_argument("-t", "--training_steps", type=int, default=100000,
                         help="training steps (default=20000)")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="(default=32)")
@@ -380,3 +397,6 @@ if __name__ == "__main__":
     dqn_agent = DQNAgent(env, verbose=args.quite, **vars(args))
     dqn_agent.train()
     dqn_agent.run_eval_episode(render=args.render_eval)
+
+    df_out.to_csv("dqn_out.csv")
+    df_ep.to_csv("dqn_ep.csv")
