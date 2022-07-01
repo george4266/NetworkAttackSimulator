@@ -28,6 +28,7 @@ import numpy as np
 from gym import error
 from pprint import pprint
 import pandas as pd
+from tensorflow.keras.callbacks import ModelCheckpoint  
 
 
 import nasim
@@ -365,7 +366,7 @@ if __name__ == "__main__":
     parser.add_argument("--hidden_sizes", type=int, nargs="*",
                         default=[64, 64],
                         help="(default=[64. 64])")
-    parser.add_argument("--lr", type=float, default=0.001,
+    parser.add_argument("--lr", type=float, default=0.05,
                         help="Learning rate (default=0.001)")
     parser.add_argument("-t", "--training_steps", type=int, default=1000,
                         help="training steps (default=20000)")
@@ -375,13 +376,13 @@ if __name__ == "__main__":
                         help="(default=1000)")
     parser.add_argument("--seed", type=int, default=0,
                         help="(default=0)")
-    parser.add_argument("--replay_size", type=int, default=20000,
+    parser.add_argument("--replay_size", type=int, default=2000,
                         help="(default=100000)")
     parser.add_argument("--final_epsilon", type=float, default=0.05,
                         help="(default=0.05)")
     parser.add_argument("--init_epsilon", type=float, default=1.0,
                         help="(default=1.0)")
-    parser.add_argument("--exploration_steps", type=int, default=10000,
+    parser.add_argument("--exploration_steps", type=int, default=1000,
                         help="(default=10000)")
     parser.add_argument("--gamma", type=float, default=0.99,
                         help="(default=0.99)")
