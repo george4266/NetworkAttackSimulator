@@ -58,3 +58,33 @@ An attempt to make a class file to create changes to any yaml file. I found this
 ## IPYNB folder
 
 In order to better analyze the output from the RL agents, I have a subfolder within the nasim/agents folder. These python notebooks are to give visual aid and correlation analysis to the outputted .csv files. This means that the analysis does not have to be within the agent file as was the case when I made my original modifications the the ql_agent.py file. 
+
+------
+## Intereesting Files to study. 
+
+> NetworkAttackSimulator/nasim/scenarios/__init__.py 
+The nasim init file. This contains the functions to create benchmarks, generate and load scenarios, and get scenario max. 
+
+> NetworkAttackSimulator/nasim/scenarios/generator.py
+As stated in the file: "This file generates network configurations and action space configurations based of the hosts and services in network using standard formula". 
+
+The exploits are all based on probabilities. The probabilities depend on what is wanted by the agent. These are explained after the class definition. Then follows the code:
+```
+def generate(self,
+                 num_hosts,
+                 num_services,
+                 num_os=2,
+                 ...
+                 address_space_bounds=None,
+                 **kwargs):
+```
+
+
+>NetworkAttackSimulator/nasim/agents/ql_agent.py
+
+```class TabularQFunction:```
+
+This class is specifically for the regualr ql agent. 
+
+
+

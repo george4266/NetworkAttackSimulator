@@ -285,7 +285,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("env_name", type=str, help="benchmark scenario name")
     parser.add_argument("--render_eval", action="store_true",
-                        help="Renders final policy")
+                        help="Renders final policy") #env? 
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
     parser.add_argument("-t", "--training_steps", type=int, default=1000000,
