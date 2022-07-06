@@ -110,7 +110,7 @@ def run_bruteforce_agent(env, step_limit=1e6, verbose=True):
 
 
 if __name__ == "__main__":
-    df = pd.DataFrame(columns=["Topology?", "Total Reward", "done", "Actions", "Action_num_val"])
+    df = pd.DataFrame(columns=["Top", "Total Reward", "done", "Actions", "Action_num_val"])
 
     import argparse
     parser = argparse.ArgumentParser()
