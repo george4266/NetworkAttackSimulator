@@ -138,5 +138,7 @@ if __name__ == "__main__":
         print(nasimenv.action_space.nvec)
     run_bruteforce_agent(nasimenv)
 
-
+    print("minimum:",df["Action_num_val"].min())
+    print("maximum:",df["Action_num_val"].max())
+    
     df.to_csv("bruteforce_out.csv")

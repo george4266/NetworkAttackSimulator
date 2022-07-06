@@ -288,7 +288,7 @@ if __name__ == "__main__":
                         help="Renders final policy") #env? 
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
-    parser.add_argument("-t", "--training_steps", type=int, default=1000000,
+    parser.add_argument("-t", "--training_steps", type=int, default=50000,
                         help="training steps (default=10000)")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="(default=32)")
