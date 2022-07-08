@@ -64,11 +64,11 @@ In order to better analyze the output from the RL agents, I have a subfolder wit
 
 > NetworkAttackSimulator/nasim/scenarios/__init__.py 
 
-
+-----
 The nasim init file. This contains the functions to create benchmarks, generate and load scenarios, and get scenario max. 
 
 > NetworkAttackSimulator/nasim/scenarios/generator.py
-
+-------
 
 As stated in the file: "This file generates network configurations and action space configurations based of the hosts and services in network using standard formula". 
 
@@ -85,7 +85,7 @@ def generate(self,
 
 
 >NetworkAttackSimulator/nasim/agents/ql_agent.py
-
+------
 ```class TabularQFunction:```
 
 This class is specifically for the regualr ql agent. 

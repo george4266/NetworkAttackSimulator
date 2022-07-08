@@ -51,14 +51,15 @@ def run_random_agent(env, step_limit=1e12, verbose=True):
 
     while not done and t < step_limit:
         a = env.action_space.sample()
-        x, r, done, _ = env.step(a)
+        obs, r, done, _ = env.step(a)
         total_reward += r
         if (t+1) % 100 == 0 and verbose:
             print(f"{t}: {total_reward}")
         t += 1
 
         count+=1
-        df.loc[len(df.index)] = [t, total_reward, done, x, _, a]
+        #obs, reward, done, info
+        df.loc[len(df.index)] = [obs, total_reward, done, _, a]
 
     if done and verbose:
         print(LINE_BREAK)
@@ -84,6 +85,7 @@ def run_random_agent(env, step_limit=1e12, verbose=True):
 if __name__ == "__main__":
     rprint("[red]Starting...[/red]")
 
+    #obs, reward, done, info, action_num_val
     df = pd.DataFrame(columns=['steps','rewards', 'done', 'topology','_x_', "action_num_val"])
     import argparse
     parser = argparse.ArgumentParser()
