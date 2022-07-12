@@ -221,7 +221,13 @@ class TabularQLearningAgent:
         while not done and steps < step_limit:
             a = self.get_egreedy_action(s, self.get_epsilon())
 
+            try:
+                a_verbose = self.env.action_space.get_action(a)
+            except:
+                a_verbose = "_"
+
             next_s, r, done, _ = self.env.step(a)
+
             self.steps_done += 1
             td_error, s_value = self.optimize(s, a, next_s, r, done)
             self.logger.add_scalar("td_error", td_error, self.steps_done)
@@ -230,6 +236,7 @@ class TabularQLearningAgent:
             s = next_s
             episode_return += r
             steps += 1
+            df4.loc[len(df4.index)] = [a, a_verbose]
 
         return episode_return, steps, self.env.goal_reached() 
 
@@ -289,6 +296,7 @@ if __name__ == "__main__":
     df1 = pd.DataFrame(columns=["num_eps", "temp", "ep_return", "goal"])
     df2 = pd.DataFrame(columns=["td_error", "s"])
     df3 = pd.DataFrame(columns=["epsilon"])
+    df4 = pd.DataFrame(columns=["action_num_val", "action_verbose"])
 
 
 
@@ -347,6 +355,9 @@ if __name__ == "__main__":
 
     df2.to_csv("Ql_agent2.csv")
     df3.to_csv("Ql_agent3.csv")
+    df4.to_csv("ql_actions.csv")
+    
+
     rprint("[bold green] Success! [/bold green]")
 
 
