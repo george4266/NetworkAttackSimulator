@@ -222,7 +222,10 @@ class TabularQLearningAgent:
             a = self.get_egreedy_action(s, self.get_epsilon())
 
             try:
-                a_verbose = self.env.action_space.get_action(a)
+                """
+                Abhay suggested the code used by a_verbose in order to get the action taken
+                """
+                a_verbose = self.env.action_space.get_action(a) 
             except:
                 a_verbose = "_"
 

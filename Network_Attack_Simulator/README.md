@@ -8,11 +8,8 @@ Shreyas Branch
 
 For my branch, I deceided to analyze the results of agents within the nasim/agents directory. To do this I modified the agents by adding pandas in order to create DataFrames and .csv files for the outputs. 
 
-So far there are three files that have had these modifications. As the list below goes on, there have been more modifications as I have learned more about the files and their structures. 
- - random_agent.py
- - bruteforce_agent.py
- - ql_agent.py
- - ql_replay_agent.py
+So far there are three files that have had these modifications. As the list below goes on, there have been more modifications as I have learned more about the files and their structures.  I have also been able to increase the number of steps. I have found that the number of action_num_vals taken are dependent on the size of the environment. 
+
 
 
 ### Random and Brute Force Agents
@@ -21,15 +18,21 @@ The Random and Brute Force are very similar in terms of structure. These have th
 
 The brute force agents uses a .ipynb file to find the most common action taken. In the file I chose to save, the most common action list taken was used 63 times. I also found that the first 5 nodes within that most common path were used 100+ times. 
 
-### Ql-Agent
+### Ql-Agents
 -----
 
 This agent had the most analysis. After the creation of the DataFrame I put the data into a google sheet. I then used google colab to generate correlation analysis and 3d scatter plots using plotly. 
 
+__New:__
+Have added more code to extract DataFrames with the exact action taken. Using the action_num_val, I am able to now directly correlate this value to actions taken. Link for datasheet provided below. The google sheet is just an analysis of the regular/tabular Q learning agent. This is the easiest to run and least memory extensive: 
+>https://docs.google.com/spreadsheets/d/113AWj0jY-pfcLMOLx_FZzTeALFoQ9tI0nuSjEVFqCyE/edit?usp=sharing 
+
+
+-----
 ## Running to Convergence
 
 The Ql-agent had modifications at the argparser parts of the file in order to run until convergence. Link to that below:
-https://docs.google.com/presentation/d/19eq2pHNGtTJ7_RPbyYcsolIyzGA5ClMpNC-lz7pfYq0/edit#slide=id.g134b413c3ff_0_0 
+>https://docs.google.com/presentation/d/19eq2pHNGtTJ7_RPbyYcsolIyzGA5ClMpNC-lz7pfYq0/edit#slide=id.g134b413c3ff_0_0 
 
 
 ----
