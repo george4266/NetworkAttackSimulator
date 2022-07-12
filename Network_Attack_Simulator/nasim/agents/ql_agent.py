@@ -128,10 +128,18 @@ class TabularQLearningAgent:
 
     def get_epsilon(self):
         if self.steps_done < self.exploration_steps:
+            #added the df1.loc before the return statements
+            df3.loc[len(df3.index)] = [self.epsilon_schedule[self.steps_done]]
             return self.epsilon_schedule[self.steps_done]
+
+        df3.loc[len(df3.index)] = [self.final_epsilon]
         return self.final_epsilon
 
     def get_egreedy_action(self, o, epsilon):
+        """
+        There is no reason to get this as it is already captured by the 
+        action_num_val
+        """
         if random.random() > epsilon:
             return self.qfunc.get_action(o)
         return random.randint(0, self.num_actions-1)
@@ -153,7 +161,9 @@ class TabularQLearningAgent:
         self.qfunc.update(s, a, td_delta)
 
         s_value = q_vals_raw.max()
+        df2.loc[len(df2.index)] = [td_error, s_value]
         return td_error, s_value
+        
 
     def train(self): # used in the main function
         if self.verbose:
@@ -268,7 +278,7 @@ class TabularQLearningAgent:
                     print(f"Total steps = {steps}")
                     print(f"Total reward = {episode_return}")
         
-            #df2.loc[len(df2.index)] = [episode_return, r, steps, Actions]
+            
             
         return episode_return, steps, env.goal_reached() #The data I use of the second DataFrame
 
@@ -276,9 +286,11 @@ class TabularQLearningAgent:
 
 if __name__ == "__main__":
     #[num_episodes,temp, ep_return, goal]
-    df1 = pd.DataFrame(columns=["ep_return","steps","episode_return","goal_reached"])
-    #[episode_return, r, steps, _, topology]
-    #df2 = pd.DataFrame(columns=["reward","diff_in_reward","steps", "Actions"])
+    df1 = pd.DataFrame(columns=["num_eps", "temp", "ep_return", "goal"])
+    df2 = pd.DataFrame(columns=["td_error", "s"])
+    df3 = pd.DataFrame(columns=["epsilon"])
+
+
 
     
     import argparse
@@ -294,7 +306,7 @@ if __name__ == "__main__":
                         help="(default=32)")
     parser.add_argument("--seed", type=int, default=0,
                         help="(default=0)")
-    parser.add_argument("--replay_size", type=int, default=5000000,
+    parser.add_argument("--replay_size", type=int, default=5000,
                         help="(default=100000)")
     parser.add_argument("--final_epsilon", type=float, default=0.05,
                         help="(default=0.05)")
@@ -331,56 +343,17 @@ if __name__ == "__main__":
 
     ql_agent.run_eval_episode(render=args.render_eval)
     rprint(Panel("Q-l agent_out_2.csv [cyan]|[/cyan] [yellow]Created![/yellow]"))
-    #df2.to_csv("Q-l agent_out_2.csv")
+
+
+    df2.to_csv("Ql_agent2.csv")
+    df3.to_csv("Ql_agent3.csv")
     rprint("[bold green] Success! [/bold green]")
 
-    #DATAFRAME 2 is more important but will print both
+
     rprint("DATAFRAME 1"+"\n",df1)
 
-    #rprint("DATAFRAME 2"+"\n",df2)
-
-    #rprint("Mode:", df2["Actions"].mode())
-    #rprint("Number of mode values:", df2["Actions"].value_counts().max())
-
-    #df2["Actions"] = df2["Actions"].astype("string") #.py won't work if it isn't a string
-    rprint("[purple]Converted required elements to strings...[/purple]")
-    fig4 = px.line(df1, x="ep_return",y="episode_return", labels = dict(ep_return = "Episode #", episode_return="Rewards"))
-    fig4.show()
 
 
-
-   
-    #fig1 = px.scatter_3d(df2, x="reward", y="diff_in_reward", z = "steps", color="diff_in_reward", title= "3D Scatter showing Difference in Rewards between Rounds", symbol="diff_in_reward", opacity=0.7, template="simple_white")
-
-    #fig2 = px.scatter_3d(df2, x="reward", y="diff_in_reward", z="steps", color="Actions", symbol="Actions", opacity=0.7, template="simple_white", hover_data={
-    
-"""    "reward" : False,
-    "diff_in_reward" : False,
-    "steps": True,
-    "Actions" : False})
-"""
-    #fig3 = px.line(df2, x= "steps", y="reward")
-    
-"""    fig2.update_layout(legend=dict(
-    yanchor="top",
-    y=0.99,
-    xanchor="left",
-    x=0.01
-))"""
-
-
-"""
-    Using plotly the figures will appear on a web browser from
-    your local host,
-
-    No need for wifi to display beautiful, interactive graphs :D
-    """
-
-"""    fig1.show() #3d scatter showind difference in points earned
-    fig2.show() #3d scatter showing differences in actions
-    fig3.show() #line chart of DataFrame 2"""
-
-    
 
 
 
