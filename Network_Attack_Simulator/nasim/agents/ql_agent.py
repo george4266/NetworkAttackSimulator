@@ -161,10 +161,7 @@ class TabularQLearningAgent:
         self.qfunc.update(s, a, td_delta)
 
         s_value = q_vals_raw.max()
-        df2.loc[len(df2.index)] = [td_error, s_value]
         return td_error, s_value
-        
-
     def train(self): # used in the main function
         if self.verbose:
             print("_______")
@@ -192,7 +189,8 @@ class TabularQLearningAgent:
                 "episode_goal_reached", int(goal), self.steps_done
             )
             
-            if num_episodes % 50 == 0 and self.verbose:
+            if num_episodes % 1 == 0 and self.verbose:
+                print(num_episodes)
                 print(f"\nEpisode {num_episodes}:")
                 print(f"\tsteps done = {self.steps_done} / "
                       f"{self.training_steps}")
@@ -201,7 +199,7 @@ class TabularQLearningAgent:
                 
 
             temp = self.steps_done / self.training_steps
-            df1.loc[len(df1.index)] = [num_episodes,temp, ep_return, goal]
+            df1.loc[len(df1.index)] = [num_episodes,temp, ep_return, goal, num_episodes]
 
         self.logger.close()
         if self.verbose:
@@ -296,7 +294,7 @@ class TabularQLearningAgent:
 
 if __name__ == "__main__":
     #[num_episodes,temp, ep_return, goal]
-    df1 = pd.DataFrame(columns=["num_eps", "temp", "ep_return", "goal"])
+    df1 = pd.DataFrame(columns=["num_eps", "temp", "ep_return", "goal", "episode_number"])
     df2 = pd.DataFrame(columns=["td_error", "s"])
     df3 = pd.DataFrame(columns=["epsilon"])
     df4 = pd.DataFrame(columns=["action_num_val", "action_verbose"])
@@ -311,7 +309,7 @@ if __name__ == "__main__":
                         help="Renders final policy") #env? 
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
-    parser.add_argument("-t", "--training_steps", type=int, default=50000,
+    parser.add_argument("-t", "--training_steps", type=int, default=5000,
                         help="training steps (default=10000)")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="(default=32)")
@@ -348,23 +346,24 @@ if __name__ == "__main__":
     
     rprint("[red]Starting...[/red]")
     ql_agent.train()
-
-    df1.to_csv("Q-l agent_out_1.csv")
-    rprint(Panel("Q-l agent_out_1.csv [cyan]|[/cyan] [yellow]Created![/yellow]"))
-
     ql_agent.run_eval_episode(render=args.render_eval)
-    rprint(Panel("Q-l agent_out_2.csv [cyan]|[/cyan] [yellow]Created![/yellow]"))
 
 
-    df2.to_csv("Ql_agent2.csv")
-    df3.to_csv("Ql_agent3.csv")
-    df4.to_csv("ql_actions.csv")
+    
+    df1.to_csv("Q-l agent_out_1.csv") #contains ep_return as well as the number of episodes
+    df2.to_csv("Ql_agent2.csv") #contains td_error and s_value
+    df3.to_csv("Ql_agent3.csv") #contains epsilon
+    df4.to_csv("ql_actions.csv") #contains action_verbose and action_num_val
+
+    try:
+   
+        print(act_df['action_num_val'].mode())
+        print(act_df['action_verbose'].mode())
+    except:
+        print("Issue with returning mode. Exception passed")
     
 
-    rprint("[bold green] Success! [/bold green]")
 
-
-    rprint("DATAFRAME 1"+"\n",df1)
 
 
 
