@@ -160,6 +160,7 @@ class TabularQLearningAgent:
         self.qfunc.update(s, a, td_delta)
 
         s_value = q_vals_raw.max()
+        df2.loc[len(df1.index)] = [td_error, s_value]
         return td_error, s_value
     def train(self): # used in the main function
         if self.verbose:
@@ -359,6 +360,10 @@ if __name__ == "__main__":
 
 
 
+
+
+
+
     
     import argparse
     parser = argparse.ArgumentParser()
@@ -367,13 +372,13 @@ if __name__ == "__main__":
                         help="Renders final policy") #env? 
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
-    parser.add_argument("-t", "--training_steps", type=int, default=5000,
+    parser.add_argument("-t", "--training_steps", type=int, default=1000,
                         help="training steps (default=10000)")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="(default=32)")
     parser.add_argument("--seed", type=int, default=0,
                         help="(default=0)")
-    parser.add_argument("--replay_size", type=int, default=5000,
+    parser.add_argument("--replay_size", type=int, default=1000,
                         help="(default=100000)")
     parser.add_argument("--final_epsilon", type=float, default=0.05,
                         help="(default=0.05)")
@@ -407,12 +412,30 @@ if __name__ == "__main__":
     ql_agent.run_eval_episode(render=args.render_eval)
 
 
+
+
+    df2['index'] = range(1,len(df2) + 1)
+    df3['index'] = range(1,len(df3) + 1)
+    df4['index'] = range(1,len(df4) + 1)
+    df5['index'] = range(1,len(df5) + 1)
+
+    df2.to_csv("seethis.csv")
+    df3.to_csv("alsothis.csv")
+
+
+    #combine using merge
+
+    result = pd.merge(df3, df4, on="index")
+    result = pd.merge(result,df5, on ="index")
+
+    result.to_csv("QL Combined.csv")
+
     
-    df1.to_csv("Q-l agent_out_1.csv") #contains ep_return as well as the number of episodes
-    df2.to_csv("Ql_agent2.csv") #contains td_error and s_value
-    df3.to_csv("Ql_agent3.csv") #contains epsilon
-    df4.to_csv("ql_actions.csv") #contains action_verbose and action_num_val
-    df5.to_csv("QL_ValueF.csv")
+    #df1.to_csv("Q-l agent_out_1.csv") #contains ep_return as well as the number of episodes
+    #df2.to_csv("Ql_agent2.csv") #contains td_error and s_value
+    #df3.to_csv("Ql_agent3.csv") #contains epsilon
+    #df4.to_csv("ql_actions.csv") #contains action_verbose and action_num_val
+    #df5.to_csv("QL_ValueF.csv")
     
 
 
