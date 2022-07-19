@@ -20,7 +20,6 @@ import numpy as np
 from pprint import pprint
 import pandas as pd 
 import plotly.express as px
-import numpy as np
 import plotly.graph_objects as go
 from rich import print as rprint
 from rich.panel import Panel
@@ -218,6 +217,7 @@ class TabularQLearningAgent:
 
         while not done and steps < step_limit:
             a = self.get_egreedy_action(s, self.get_epsilon())
+            self.action_num_val = a
 
             try:
                 """
@@ -225,7 +225,7 @@ class TabularQLearningAgent:
                 """
                 a_verbose = self.env.action_space.get_action(a) 
             except:
-                a_verbose = "_"
+                a_verbose = -1
 
             next_s, r, done, _ = self.env.step(a)
 
@@ -253,6 +253,15 @@ class TabularQLearningAgent:
 
         steps = 0
         episode_return = 0
+        
+        """
+        decided to just use a temp variable instead of using an 
+        array and the .sum() method to hold sums from the equation
+        """
+
+        value = 0
+        temp_v = 0
+        new_v = 0
 
         line_break = "="*60
         if render:
@@ -268,6 +277,20 @@ class TabularQLearningAgent:
             s = next_s
             episode_return += r
             steps += 1
+            
+            
+            
+
+            #value function
+            gamma = self.discount
+            action = int(a)
+            reward = int(episode_return)
+            prob = 0
+            value = 0
+
+
+            df5.loc[len(df5.index)] = [gamma, action, reward, prob, value]
+
 
             if render:
                 print("\n" + line_break)
@@ -285,10 +308,31 @@ class TabularQLearningAgent:
                     print(f"Goal reached = {env.goal_reached()}")
                     print(f"Total steps = {steps}")
                     print(f"Total reward = {episode_return}")
+    
+
         
             
             
         return episode_return, steps, env.goal_reached() #The data I use of the second DataFrame
+
+"""    def val_func(self):
+        gamma = self.discount #gamma
+        action = self.action_num_val #action
+
+        
+        #The 0s are test values for right now
+        
+        reward = 0 #reward
+        probability = 0#probability
+
+        #value equation
+        value = 0
+        
+        
+        df5.loc[len(df5.index)] = [gamma, action, reward, probability, value]
+
+        pass
+"""
 
 
 
@@ -298,6 +342,7 @@ if __name__ == "__main__":
     df2 = pd.DataFrame(columns=["td_error", "s"])
     df3 = pd.DataFrame(columns=["epsilon"])
     df4 = pd.DataFrame(columns=["action_num_val", "action_verbose"])
+    df5 = pd.DataFrame(columns=["gamma", "action_num_val", "reward", "probability", "value"])
 
 
 
@@ -354,13 +399,7 @@ if __name__ == "__main__":
     df2.to_csv("Ql_agent2.csv") #contains td_error and s_value
     df3.to_csv("Ql_agent3.csv") #contains epsilon
     df4.to_csv("ql_actions.csv") #contains action_verbose and action_num_val
-
-    try:
-   
-        print(act_df['action_num_val'].mode())
-        print(act_df['action_verbose'].mode())
-    except:
-        print("Issue with returning mode. Exception passed")
+    df5.to_csv("QL_ValueF.csv")
     
 
 
