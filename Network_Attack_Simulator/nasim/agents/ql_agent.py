@@ -419,8 +419,7 @@ if __name__ == "__main__":
     df4['index'] = range(1,len(df4) + 1)
     df5['index'] = range(1,len(df5) + 1)
 
-    df2.to_csv("seethis.csv")
-    df3.to_csv("alsothis.csv")
+ 
 
 
     #combine using merge
