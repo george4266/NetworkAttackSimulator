@@ -262,6 +262,7 @@ class TabularQLearningAgent:
         value = 0
         temp_v = 0
         new_v = 0
+        
 
         line_break = "="*60
         if render:
@@ -277,16 +278,28 @@ class TabularQLearningAgent:
             s = next_s
             episode_return += r
             steps += 1
+            a_verbose = self.env.action_space.get_action(a)
             
-            
-            
+
+
+            """
+            doing this as changing the code near get_action may cause
+            many issues. May be good for in the future to write some code
+            wherever this file is to get a way to get the probability much like
+            the 'action_space.get_action(a)' 
+            """
+            text = str(a_verbose)
+            result = text.index("prob=")
+            probability = text[result+5:result+9]
+            probability = float(probability)
 
             #value function
             gamma = self.discount
             action = int(a)
             reward = int(episode_return)
-            prob = 0
+            prob = probability
             value = 0
+            
 
 
             df5.loc[len(df5.index)] = [gamma, action, reward, prob, value]
