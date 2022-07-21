@@ -238,7 +238,7 @@ class TabularQLearningAgent:
             s = next_s
             episode_return += r
             steps += 1
-            df4.loc[len(df4.index)] = [a, a_verbose]
+            df4.loc[len(df4.index)] = [a, a_verbose, td_error, s_value]
 
         return episode_return, steps, self.env.goal_reached() 
 
@@ -299,11 +299,11 @@ class TabularQLearningAgent:
             action = int(a)
             reward = int(episode_return)
             prob = probability
-            value = 0
+            
             
 
 
-            df5.loc[len(df5.index)] = [gamma, action, reward, prob, value]
+            df5.loc[len(df5.index)] = [gamma, reward, prob]
 
 
             if render:
@@ -355,8 +355,8 @@ if __name__ == "__main__":
     df1 = pd.DataFrame(columns=["num_eps", "temp", "ep_return", "goal", "episode_number"])
     df2 = pd.DataFrame(columns=["td_error", "s"])
     df3 = pd.DataFrame(columns=["epsilon"])
-    df4 = pd.DataFrame(columns=["action_num_val", "action_verbose"])
-    df5 = pd.DataFrame(columns=["gamma", "action_num_val", "reward", "probability", "value"])
+    df4 = pd.DataFrame(columns=["action_num_val", "action_verbose", "td_error", "s_value"])
+    df5 = pd.DataFrame(columns=["gamma", "reward", "probability"])
 
 
 
@@ -411,7 +411,12 @@ if __name__ == "__main__":
     ql_agent.train()
     ql_agent.run_eval_episode(render=args.render_eval)
 
+    """
+    The below code combines all the dataframes into one single dataframe
+    I then tried to go online to find an implementation of a state-action
+    value function. 
 
+    """
 
 
     df2['index'] = range(1,len(df2) + 1)
@@ -427,35 +432,77 @@ if __name__ == "__main__":
     result = pd.merge(df3, df4, on="index")
     result = pd.merge(result,df5, on ="index")
 
+    #testing to make sure I can even do a calcualation on DataFrame
+    
+ 
+    
+    
+    def find_value(state, action,reward, lr=0.002, gamma = 0.99):
+        gamma = 0.99
+        
+        # have to get array from the yaml file most likely. 
+        value = action + lr*(reward+gamma * max_r -action)
+        return value
+
+
+
+    #getting variables for the parts of the result DataFrame
+    S = result.s_value #s_value
+    P = result.probability #probability 
+    A = result.action_num_val #action num vals
+    R = result.reward # reward
+    E = result.epsilon #epsilon value
+    max_r = 100
+
+    gamma = 0.99
+    lr = 0.002
+
+    #I dont think this is the equation either. But it is from something I found online
+    result["Value"] = A + lr * (R+gamma * max_r - A)
+
+
+    
+
+
+    
+    #convert the combined DataFrame into a .csv file
     result.to_csv("QL Combined.csv")
 
+
+
+    """
+    Below are links and attempts fot the value function code
+    """
+
+    #1) https://towardsdatascience.com/simple-reinforcement-learning-q-learning-fcddc4b6fe56 
+
+    #2) Example of a value iteration algorithm 
+    #https://www.youtube.com/watch?v=hUqeGLkx_zs
+    def value_iterations(S, A, P, R):
+        optimal_policy = {s: 0 for s in S}
+        V = {s: 0 for s in S}
+
+        while True:
+            oldV = V.copy()
+
+            for s in S:
+                Q={}
+                for a in A:
+                    #the below line of code is causing issues with a "Series is not callable"
+                    Q[a] = R(s,a) + sum(P(s_next, s, a) * oldV[s_next] for s_next in S)
+                
+                V[s] = max(Q.values())
+                optimal_policy[s] = max(Q, key=Q.get)
+
+            if all(oldV[s] == V[s] for s in S):
+                break
+        
+        return V
+
+    #3) https://medium.com/@m.alzantot/deep-reinforcement-learning-demysitifed-episode-2-policy-iteration-value-iteration-and-q-978f9e89ddaa
+
+    #4) 
+
     
-    #df1.to_csv("Q-l agent_out_1.csv") #contains ep_return as well as the number of episodes
-    #df2.to_csv("Ql_agent2.csv") #contains td_error and s_value
-    #df3.to_csv("Ql_agent3.csv") #contains epsilon
-    #df4.to_csv("ql_actions.csv") #contains action_verbose and action_num_val
-    #df5.to_csv("QL_ValueF.csv")
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     
-
-
-
