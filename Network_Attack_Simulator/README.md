@@ -23,10 +23,17 @@ The brute force agents uses a .ipynb file to find the most common action taken. 
 
 This agent had the most analysis. After the creation of the DataFrame I put the data into a google sheet. I then used google colab to generate correlation analysis and 3d scatter plots using plotly. 
 
-__New:__
+__New:__ 
+The DataFrames are combined all into one common DataFrame and .csv file. This is much better than having to analyze 5 different .csv files individually. The data outputed is very easy to understand. 
+
+
 Have added more code to extract DataFrames with the exact action taken. Using the action_num_val, I am able to now directly correlate this value to actions taken. Link for datasheet provided below. The google sheet is just an analysis of the regular/tabular Q learning agent. This is the easiest to run and least memory extensive: 
 >https://docs.google.com/spreadsheets/d/113AWj0jY-pfcLMOLx_FZzTeALFoQ9tI0nuSjEVFqCyE/edit?usp=sharing 
 
+
+
+__New:__ 
+Have been adding code in order to do a value function. So far these are just implementations that I found online or tried making myself. They do not seem to be working as of right now but I am still working on them. 
 
 ---- 
 ## Running to Convergence

@@ -502,6 +502,9 @@ if __name__ == "__main__":
 
     #3) https://medium.com/@m.alzantot/deep-reinforcement-learning-demysitifed-episode-2-policy-iteration-value-iteration-and-q-978f9e89ddaa
 
+
+    #4) https://towardsdatascience.com/how-to-code-the-value-iteration-algorithm-for-reinforcement-learning-8fb806e117d1 
+    
      
 
     
