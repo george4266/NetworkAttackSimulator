@@ -372,13 +372,13 @@ if __name__ == "__main__":
                         help="Renders final policy") #env? 
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
-    parser.add_argument("-t", "--training_steps", type=int, default=1000,
+    parser.add_argument("-t", "--training_steps", type=int, default=50000,
                         help="training steps (default=10000)")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="(default=32)")
     parser.add_argument("--seed", type=int, default=0,
                         help="(default=0)")
-    parser.add_argument("--replay_size", type=int, default=1000,
+    parser.add_argument("--replay_size", type=int, default=50000,
                         help="(default=100000)")
     parser.add_argument("--final_epsilon", type=float, default=0.05,
                         help="(default=0.05)")
@@ -467,6 +467,7 @@ if __name__ == "__main__":
     
     #convert the combined DataFrame into a .csv file
     result.to_csv("QL Combined.csv")
+    print("csv created")
 
 
 
@@ -501,7 +502,7 @@ if __name__ == "__main__":
 
     #3) https://medium.com/@m.alzantot/deep-reinforcement-learning-demysitifed-episode-2-policy-iteration-value-iteration-and-q-978f9e89ddaa
 
-    #4) 
+     
 
     
 
