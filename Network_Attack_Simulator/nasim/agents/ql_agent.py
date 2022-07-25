@@ -435,6 +435,16 @@ if __name__ == "__main__":
     #testing to make sure I can even do a calcualation on DataFrame
     
  
+
+
+
+
+
+
+
+    """
+    Creating 'Value' Calculations manually based on papers and other vids
+    """
     
     
     def find_value(state, action,reward, lr=0.002, gamma = 0.99):
@@ -454,10 +464,13 @@ if __name__ == "__main__":
     E = result.epsilon #epsilon value
     max_r = 100
 
+    #as created in the TabularQFunction
     gamma = 0.99
     lr = 0.002
 
     #I dont think this is the equation either. But it is from something I found online
+
+    #value = Action_num_val + learning_rate *(Reward + gamma + maximum_reward_available - action_num_val)
     result["Value"] = A + lr * (R+gamma * max_r - A)
 
 
@@ -472,10 +485,10 @@ if __name__ == "__main__":
 
 
     """
-    Below are links and attempts fot the value function code
+
     """
 
-    #1) https://towardsdatascience.com/simple-reinforcement-learning-q-learning-fcddc4b6fe56 
+    #1) https://github.com/jinglescode/reinforcement-learning-tic-tac-toe/blob/master/agent.js
 
     #2) Example of a value iteration algorithm 
     #https://www.youtube.com/watch?v=hUqeGLkx_zs
@@ -489,7 +502,8 @@ if __name__ == "__main__":
             for s in S:
                 Q={}
                 for a in A:
-                    #the below line of code is causing issues with a "Series is not callable"
+                    #the below line of code is causing issues with a "Series is not callable" 
+                    #fix this line later
                     Q[a] = R(s,a) + sum(P(s_next, s, a) * oldV[s_next] for s_next in S)
                 
                 V[s] = max(Q.values())
@@ -500,11 +514,6 @@ if __name__ == "__main__":
         
         return V
 
-    #3) https://medium.com/@m.alzantot/deep-reinforcement-learning-demysitifed-episode-2-policy-iteration-value-iteration-and-q-978f9e89ddaa
-
-
-    #4) https://towardsdatascience.com/how-to-code-the-value-iteration-algorithm-for-reinforcement-learning-8fb806e117d1 
-    
      
 
     
