@@ -22,9 +22,11 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from rich import print as rprint
-from rich.panel import Panel
-from rich.columns import Columns
- 
+
+
+
+
+
 
 
 
@@ -168,6 +170,8 @@ class TabularQLearningAgent:
     def train(self): # used in the main function
         if self.verbose:
             print("_______")
+        
+        step_num = []
 
         num_episodes = 0
         training_steps_remaining = self.training_steps
@@ -199,6 +203,10 @@ class TabularQLearningAgent:
                       f"{self.training_steps}")
                 print(f"\treturn = {ep_return}")
                 print(f"\tgoal = {goal}")
+                step_num.append(self.steps_done)
+            
+            self.step_num = step_num #now a part of the object
+
                 
 
             temp = self.steps_done / self.training_steps
@@ -211,6 +219,9 @@ class TabularQLearningAgent:
             print(f"\tsteps done = {self.steps_done} / {self.training_steps}")
             print(f"\treturn = {ep_return}")
             print(f"\tgoal = {goal}")
+
+    def step_get(self):
+        return self.step_num #initialized in the train function
 
     def run_train_episode(self, step_limit): 
         s = self.env.reset()
@@ -354,13 +365,19 @@ class TabularQLearningAgent:
 
 
 if __name__ == "__main__":
-    #[num_episodes,temp, ep_return, goal]
+    #6 dataframes to be combined later
     df1 = pd.DataFrame(columns=["num_eps", "temp", "ep_return", "goal", "episode_number"])
     df2 = pd.DataFrame(columns=["td_error", "s_value", "target_q_val", "td_delta"])
     df3 = pd.DataFrame(columns=["epsilon"])
     df4 = pd.DataFrame(columns=["action_num_val", "action_verbose", "td_error", "s_value"])
     df5 = pd.DataFrame(columns=["gamma", "reward", "probability"])
     for_df = pd.DataFrame(columns=["q_func_value"])
+
+
+
+
+
+
 
 
 
@@ -376,13 +393,13 @@ if __name__ == "__main__":
                         help="Renders final policy") #env? 
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
-    parser.add_argument("-t", "--training_steps", type=int, default=5000,
+    parser.add_argument("-t", "--training_steps", type=int, default=1000,
                         help="training steps (default=10000)")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="(default=32)")
     parser.add_argument("--seed", type=int, default=0,
                         help="(default=0)")
-    parser.add_argument("--replay_size", type=int, default=5000,
+    parser.add_argument("--replay_size", type=int, default=1000,
                         help="(default=100000)")
     parser.add_argument("--final_epsilon", type=float, default=0.05,
                         help="(default=0.05)")
@@ -415,6 +432,9 @@ if __name__ == "__main__":
     ql_agent.train()
     ql_agent.run_eval_episode(render=args.render_eval)
 
+    step_num = ql_agent.step_get()
+    print(step_num)
+
     """
     The below code combines all the dataframes into one single dataframe
     I then tried to go online to find an implementation of a state-action
@@ -438,13 +458,21 @@ if __name__ == "__main__":
     result = pd.merge(result,df5, on ="index")
     result = pd.merge(result,for_df, on ="index")
 
-    #testing to make sure I can even do a calcualation on DataFrame
+    
+
 
     
     #convert the combined DataFrame into a .csv file
     result.to_csv("QL Combined.csv")
+    
     print("csv created")
 
+
+    """
+    Data Analysis Automation Portion
+    """
+
+    
 
 
      
