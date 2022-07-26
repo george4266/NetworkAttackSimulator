@@ -55,6 +55,9 @@ class TabularQFunction:
             x = str(x.astype(np.int32)) #no more depreciation errors now :D
         if x not in self.q_func:
             self.q_func[x] = np.zeros(self.num_actions, dtype=np.float32)
+        
+        for_df.loc[len(for_df.index)] = [self.q_func[x]]
+        
         return self.q_func[x]
 
     def forward_batch(self, x_batch):
@@ -160,7 +163,7 @@ class TabularQLearningAgent:
         self.qfunc.update(s, a, td_delta)
 
         s_value = q_vals_raw.max()
-        df2.loc[len(df1.index)] = [td_error, s_value]
+        df2.loc[len(df1.index)] = [td_error, s_value, target_q_val, td_delta]
         return td_error, s_value
     def train(self): # used in the main function
         if self.verbose:
@@ -353,10 +356,11 @@ class TabularQLearningAgent:
 if __name__ == "__main__":
     #[num_episodes,temp, ep_return, goal]
     df1 = pd.DataFrame(columns=["num_eps", "temp", "ep_return", "goal", "episode_number"])
-    df2 = pd.DataFrame(columns=["td_error", "s"])
+    df2 = pd.DataFrame(columns=["td_error", "s_value", "target_q_val", "td_delta"])
     df3 = pd.DataFrame(columns=["epsilon"])
     df4 = pd.DataFrame(columns=["action_num_val", "action_verbose", "td_error", "s_value"])
     df5 = pd.DataFrame(columns=["gamma", "reward", "probability"])
+    for_df = pd.DataFrame(columns=["q_func_value"])
 
 
 
@@ -372,13 +376,13 @@ if __name__ == "__main__":
                         help="Renders final policy") #env? 
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
-    parser.add_argument("-t", "--training_steps", type=int, default=50000,
+    parser.add_argument("-t", "--training_steps", type=int, default=5000,
                         help="training steps (default=10000)")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="(default=32)")
     parser.add_argument("--seed", type=int, default=0,
                         help="(default=0)")
-    parser.add_argument("--replay_size", type=int, default=50000,
+    parser.add_argument("--replay_size", type=int, default=5000,
                         help="(default=100000)")
     parser.add_argument("--final_epsilon", type=float, default=0.05,
                         help="(default=0.05)")
@@ -423,6 +427,7 @@ if __name__ == "__main__":
     df3['index'] = range(1,len(df3) + 1)
     df4['index'] = range(1,len(df4) + 1)
     df5['index'] = range(1,len(df5) + 1)
+    for_df['index']= range(1,len(for_df) + 1)
 
  
 
@@ -431,51 +436,9 @@ if __name__ == "__main__":
 
     result = pd.merge(df3, df4, on="index")
     result = pd.merge(result,df5, on ="index")
+    result = pd.merge(result,for_df, on ="index")
 
     #testing to make sure I can even do a calcualation on DataFrame
-    
- 
-
-
-
-
-
-
-
-    """
-    Creating 'Value' Calculations manually based on papers and other vids
-    """
-    
-    
-    def find_value(state, action,reward, lr=0.002, gamma = 0.99):
-        gamma = 0.99
-        
-        # have to get array from the yaml file most likely. 
-        value = action + lr*(reward+gamma * max_r -action)
-        return value
-
-
-
-    #getting variables for the parts of the result DataFrame
-    S = result.s_value #s_value
-    P = result.probability #probability 
-    A = result.action_num_val #action num vals
-    R = result.reward # reward
-    E = result.epsilon #epsilon value
-    max_r = 100
-
-    #as created in the TabularQFunction
-    gamma = 0.99
-    lr = 0.002
-
-    #I dont think this is the equation either. But it is from something I found online
-
-    #value = Action_num_val + learning_rate *(Reward + gamma + maximum_reward_available - action_num_val)
-    result["Value"] = A + lr * (R+gamma * max_r - A)
-
-
-    
-
 
     
     #convert the combined DataFrame into a .csv file
@@ -483,36 +446,6 @@ if __name__ == "__main__":
     print("csv created")
 
 
-
-    """
-
-    """
-
-    #1) https://github.com/jinglescode/reinforcement-learning-tic-tac-toe/blob/master/agent.js
-
-    #2) Example of a value iteration algorithm 
-    #https://www.youtube.com/watch?v=hUqeGLkx_zs
-    def value_iterations(S, A, P, R):
-        optimal_policy = {s: 0 for s in S}
-        V = {s: 0 for s in S}
-
-        while True:
-            oldV = V.copy()
-
-            for s in S:
-                Q={}
-                for a in A:
-                    #the below line of code is causing issues with a "Series is not callable" 
-                    #fix this line later
-                    Q[a] = R(s,a) + sum(P(s_next, s, a) * oldV[s_next] for s_next in S)
-                
-                V[s] = max(Q.values())
-                optimal_policy[s] = max(Q, key=Q.get)
-
-            if all(oldV[s] == V[s] for s in S):
-                break
-        
-        return V
 
      
 
