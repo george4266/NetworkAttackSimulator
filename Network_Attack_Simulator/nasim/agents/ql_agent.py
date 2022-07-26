@@ -433,7 +433,7 @@ if __name__ == "__main__":
     ql_agent.run_eval_episode(render=args.render_eval)
 
     step_num = ql_agent.step_get()
-    print(step_num)
+    
 
     """
     The below code combines all the dataframes into one single dataframe
@@ -442,35 +442,36 @@ if __name__ == "__main__":
 
     """
 
-
     df2['index'] = range(1,len(df2) + 1)
     df3['index'] = range(1,len(df3) + 1)
     df4['index'] = range(1,len(df4) + 1)
     df5['index'] = range(1,len(df5) + 1)
     for_df['index']= range(1,len(for_df) + 1)
 
- 
-
-
     #combine using merge
-
     result = pd.merge(df3, df4, on="index")
     result = pd.merge(result,df5, on ="index")
     result = pd.merge(result,for_df, on ="index")
-
-    
-
-
     
     #convert the combined DataFrame into a .csv file
-    result.to_csv("QL Combined.csv")
+    result.to_csv("QL_Output.csv")
     
-    print("csv created")
+    rprint("[green]QL_Output.csv[/green]")
 
 
     """
-    Data Analysis Automation Portion
+    Create a number of variables depending on 
+    the number of episodes. TODO later
     """
+
+    episode_seperator = {}
+    for num in step_num:
+        var_name = "brk%d" % num 
+        episode_seperator[var_name] = num
+    
+    print(episode_seperator.keys())
+    
+
 
     
 
