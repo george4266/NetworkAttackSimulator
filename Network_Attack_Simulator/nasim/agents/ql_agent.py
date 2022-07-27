@@ -206,6 +206,7 @@ class TabularQLearningAgent:
                 step_num.append(self.steps_done)
             
             self.step_num = step_num #now a part of the object
+            self.eps_num = num_episodes
 
                 
 
@@ -220,8 +221,8 @@ class TabularQLearningAgent:
             print(f"\treturn = {ep_return}")
             print(f"\tgoal = {goal}")
 
-    def step_get(self):
-        return self.step_num #initialized in the train function
+    def get_step(self):
+        return self.step_num, self.eps_num
 
     def run_train_episode(self, step_limit): 
         s = self.env.reset()
@@ -362,6 +363,24 @@ class TabularQLearningAgent:
         pass
 """
 
+#if needed will make a new class
+
+def eps_seperation(step_num, eps_num):
+    #still working on this code
+    episode_seperator={}
+    for num in step_num:
+            temp_dict = {}
+            var_name = "brk%d" % num
+            temp_dict[var_name] = num
+            print(temp_dict, num)
+            episode_seperator.update(temp_dict)
+    for key,value in episode_seperator.items():
+        print(key, ":", value)
+
+    return episode_seperator
+    
+
+
 
 
 if __name__ == "__main__":
@@ -372,18 +391,6 @@ if __name__ == "__main__":
     df4 = pd.DataFrame(columns=["action_num_val", "action_verbose", "td_error", "s_value"])
     df5 = pd.DataFrame(columns=["gamma", "reward", "probability"])
     for_df = pd.DataFrame(columns=["q_func_value"])
-
-
-
-
-
-
-
-
-
-
-
-
 
     
     import argparse
@@ -432,7 +439,7 @@ if __name__ == "__main__":
     ql_agent.train()
     ql_agent.run_eval_episode(render=args.render_eval)
 
-    step_num = ql_agent.step_get()
+    step_num, eps_num = ql_agent.get_step()
     
 
     """
@@ -464,15 +471,29 @@ if __name__ == "__main__":
     the number of episodes. TODO later
     """
 
-    episode_seperator = {}
-    for num in step_num:
-        var_name = "brk%d" % num 
-        episode_seperator[var_name] = num
+    #WIP
+    #eps_seperation( step_num, eps_num)
     
-    print(episode_seperator.keys())
-    
+    most_common_action=(result["action_num_val"].value_counts().nlargest(5))
 
 
+    """
+    Calls for an action num val csv sheet
+    to be created in order to best compare this
+    with the most_common_action number 
+    """
+    
+    ANV_legend = result.drop_duplicates(subset=["action_num_val"])
+    ANV_legend.sort_values(by=["action_num_val"])
+    ANV_legend.to_csv("ANV_legend.csv")
+
+    print(most_common_action)
+    
+
+        
+
+
+    
     
 
 

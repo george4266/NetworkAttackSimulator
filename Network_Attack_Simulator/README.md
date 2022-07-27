@@ -23,7 +23,8 @@ The brute force agents uses a .ipynb file to find the most common action taken. 
 
 This agent had the most analysis. After the creation of the DataFrame I put the data into a google sheet. I then used google colab to generate correlation analysis and 3d scatter plots using plotly. 
 
-__New:__ 
+
+
 The DataFrames are combined all into one common DataFrame and .csv file. This is much better than having to analyze 5 different .csv files individually. The data outputed is very easy to understand. 
 
 
@@ -32,7 +33,7 @@ Have added more code to extract DataFrames with the exact action taken. Using th
 
 
 
-__New:__ 
+
 Have been adding code in order to do a value function. So far these are just implementations that I found online or tried making myself. They do not seem to be working as of right now but I am still working on them. 
 
 ---- 
@@ -99,6 +100,21 @@ def generate(self,
 ```class TabularQFunction:```
 
 - This class is specifically for the regualr ql agent. 
+
+
+------
+## Automation of Data Analysis
+
+__New:__
+
+More modifications for output analysis have been added to the ql_agent.py file. These modifications aim to make a more streamlined way for this and other agents to have output analsysis. This is for reasearchers on the topic to be able to see features as: most common action in an episode, number of episodes, number of steps per episode, most and least common attacked host and so on. 
+
+Currently I am the beginning stages of this. This is a work in progress. Most modifications have been made to the end of the file as of now. Only some changes have been made to the Classes within the file most of those regarding the values returned. 
+
+No new fixes against depreciation issues have been completed at this time. 
+
+
+![image of current idea](data_analysis_flowchart.png)
 
 
 
