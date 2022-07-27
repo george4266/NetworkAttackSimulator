@@ -344,40 +344,28 @@ class TabularQLearningAgent:
             
         return episode_return, steps, env.goal_reached() #The data I use of the second DataFrame
 
-"""    def val_func(self):
-        gamma = self.discount #gamma
-        action = self.action_num_val #action
 
-        
-        #The 0s are test values for right now
-        
-        reward = 0 #reward
-        probability = 0#probability
 
-        #value equation
-        value = 0
-        
-        
-        df5.loc[len(df5.index)] = [gamma, action, reward, probability, value]
+#decided to create a class so to keep lots of the clutter outside the main function
 
-        pass
-"""
+class Auto_Analyze: 
+    def __init__(self, step_num, eps_num):
+        self.episode_seperator = {}
+        self.step_num = step_num
+        self.eps_num = eps_num
 
-#if needed will make a new class
 
-def eps_seperation(step_num, eps_num):
-    #still working on this code
-    episode_seperator={}
-    for num in step_num:
-            temp_dict = {}
-            var_name = "brk%d" % num
-            temp_dict[var_name] = num
-            print(temp_dict, num)
-            episode_seperator.update(temp_dict)
-    for key,value in episode_seperator.items():
-        print(key, ":", value)
+    def eps_seperation(self, step_num, eps_num):
+        for num in step_num:
+                temp_dict = {}
+                var_name = "brk%d" % num
+                temp_dict[var_name] = num
+                print(temp_dict, num)
+                self.episode_seperator.update(temp_dict)
+        for key,value in self.episode_seperator.items():
+            print(key, ":", value)
 
-    return episode_seperator
+        return self.episode_seperator
     
 
 
@@ -475,19 +463,34 @@ if __name__ == "__main__":
     #eps_seperation( step_num, eps_num)
     
     most_common_action=(result["action_num_val"].value_counts().nlargest(5))
-
+    least_common_action=(result["action_num_val"].value_counts().nsmallest(5))
 
     """
     Calls for an action num val csv sheet
     to be created in order to best compare this
     with the most_common_action number 
+
+    I am currently figuring out a way to better output these
+    statistics rather than just printing their results back
+    into the console. 
     """
-    
+
     ANV_legend = result.drop_duplicates(subset=["action_num_val"])
+    ANV_legend = ANV_legend[["index", "action_num_val", "action_verbose"]]
     ANV_legend.sort_values(by=["action_num_val"])
     ANV_legend.to_csv("ANV_legend.csv")
 
-    print(most_common_action)
+    
+    #will correlate this to the ANV_legend.csv file
+    single_most = (result["action_num_val"].value_counts().nlargest(1))
+    single_most = int(single_most[0])
+
+    
+
+
+
+    print("The 5 least common action preformed by the agent was: {}".format(least_common_action))
+    print("The 5 most common action preformed by the agent was {}".format(most_common_action))
     
 
         

@@ -117,4 +117,7 @@ No new fixes against depreciation issues have been completed at this time.
 ![image of current idea](/Network_Attack_Simulator/nasim/agents/DAF.png)
 
 
+The black textbox represents what I have currently stopped working on as of now. The blue textboxes are what I am working on as of now or parts that hvae been completed. Currently I have skipped around the splitting of DataFrames into smaller pieces and will come back to that later. 
+
+
 
