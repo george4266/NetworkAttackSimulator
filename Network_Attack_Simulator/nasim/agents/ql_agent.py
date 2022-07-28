@@ -309,6 +309,12 @@ class TabularQLearningAgent:
             probability = text[result+5:result+9]
             probability = float(probability)
 
+            result = text.index("target=")
+            target_host = text[result+8:result+12]
+            
+
+            
+
             #value function
             gamma = self.discount
             action = int(a)
@@ -318,7 +324,7 @@ class TabularQLearningAgent:
             
 
 
-            df5.loc[len(df5.index)] = [gamma, reward, prob]
+            df5.loc[len(df5.index)] = [gamma, reward, prob, target_host]
 
 
             if render:
@@ -377,7 +383,7 @@ if __name__ == "__main__":
     df2 = pd.DataFrame(columns=["td_error", "s_value", "target_q_val", "td_delta"])
     df3 = pd.DataFrame(columns=["epsilon"])
     df4 = pd.DataFrame(columns=["action_num_val", "action_verbose", "td_error", "s_value"])
-    df5 = pd.DataFrame(columns=["gamma", "reward", "probability"])
+    df5 = pd.DataFrame(columns=["gamma", "reward", "probability", "target_host"])
     for_df = pd.DataFrame(columns=["q_func_value"])
 
     
@@ -487,10 +493,10 @@ if __name__ == "__main__":
 
     
 
+    br = "\n"
 
-
-    print("The 5 least common action preformed by the agent was: {}".format(least_common_action))
-    print("The 5 most common action preformed by the agent was {}".format(most_common_action))
+    print("The 5 least common action preformed by the agent was:{}{}".format(br,least_common_action))
+    print("The 5 most common action preformed by the agent was:{}{}".format(br,most_common_action))
     
 
         
