@@ -196,7 +196,7 @@ class TabularQLearningAgent:
                 "episode_goal_reached", int(goal), self.steps_done
             )
             
-            if num_episodes % 1 == 0 and self.verbose:
+            if num_episodes % 10 == 0 and self.verbose:
                 print(num_episodes)
                 print(f"\nEpisode {num_episodes}:")
                 print(f"\tsteps done = {self.steps_done} / "
@@ -313,7 +313,8 @@ class TabularQLearningAgent:
             target_host = text[result+8:result+12]
             
 
-            
+            #Have recently learned the above code does not work as intended. 
+            #So I am currently reading the code to do someting similar to the get_step() function as I did earleir
 
             #value function
             gamma = self.discount
@@ -394,19 +395,19 @@ if __name__ == "__main__":
                         help="Renders final policy") #env? 
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
-    parser.add_argument("-t", "--training_steps", type=int, default=1000,
+    parser.add_argument("-t", "--training_steps", type=int, default=34000,
                         help="training steps (default=10000)")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="(default=32)")
     parser.add_argument("--seed", type=int, default=0,
                         help="(default=0)")
-    parser.add_argument("--replay_size", type=int, default=1000,
+    parser.add_argument("--replay_size", type=int, default=10000,
                         help="(default=100000)")
     parser.add_argument("--final_epsilon", type=float, default=0.05,
                         help="(default=0.05)")
     parser.add_argument("--init_epsilon", type=float, default=1.0,
                         help="(default=1.0)")
-    parser.add_argument("-e", "--exploration_steps", type=int, default=1000000,
+    parser.add_argument("-e", "--exploration_steps", type=int, default=10000,
                         help="(default=10000)")
     parser.add_argument("--gamma", type=float, default=0.99,
                         help="(default=0.99)")
@@ -489,7 +490,7 @@ if __name__ == "__main__":
     
     #will correlate this to the ANV_legend.csv file
     single_most = (result["action_num_val"].value_counts().nlargest(1))
-    single_most = int(single_most[0])
+    single_most = (single_most[0])
 
     
 
