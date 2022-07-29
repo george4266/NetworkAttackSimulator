@@ -1,4 +1,4 @@
-# ESD_NASim_Summer2022
+# ESD_NASim_Summer 2022
 
 
 Shreyas Branch
@@ -25,4 +25,4 @@ Due to time constraints, there are some goals that I was unable to get to during
 
 I earlier made fixes to depreciated code within the Q learning agents. I believe these were later fixed in the actual main nasim repository. 
 
-Also lots of the changes made are documented in the README.md within the nasim folder. 
+Also lots of the changes made are documented in the README.md within the following "NetworkAttackSimulator" folder. 
