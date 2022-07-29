@@ -148,6 +148,7 @@ class TabularQLearningAgent:
             return self.qfunc.get_action(o)
         return random.randint(0, self.num_actions-1)
 
+
     def optimize(self, s, a, next_s, r, done):
         # get q_val for state and action performed in that state
         q_vals_raw = self.qfunc.forward(s)
@@ -224,6 +225,8 @@ class TabularQLearningAgent:
     def get_step(self):
         return self.step_num, self.eps_num
 
+    def get_a_space(self):
+        return self.num_actions,self.obs_dim
     def run_train_episode(self, step_limit): 
         s = self.env.reset()
         done = False
@@ -395,7 +398,7 @@ if __name__ == "__main__":
                         help="Renders final policy") #env? 
     parser.add_argument("--lr", type=float, default=0.001,
                         help="Learning rate (default=0.001)")
-    parser.add_argument("-t", "--training_steps", type=int, default=34000,
+    parser.add_argument("-t", "--training_steps", type=int, default=1000, #made this smaller so I could test and run faster
                         help="training steps (default=10000)")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="(default=32)")
@@ -434,7 +437,11 @@ if __name__ == "__main__":
     ql_agent.train()
     ql_agent.run_eval_episode(render=args.render_eval)
 
+
+    #looking for host data
     step_num, eps_num = ql_agent.get_step()
+    actions = ql_agent.get_a_space
+    rprint(actions)
     
 
     """
@@ -482,12 +489,20 @@ if __name__ == "__main__":
     into the console. 
     """
 
+    
+    #**UNCOMMENT BELOW IF**
+    #not using tiny, small, medium environment
+
+
+    """
     ANV_legend = result.drop_duplicates(subset=["action_num_val"])
     ANV_legend = ANV_legend[["index", "action_num_val", "action_verbose"]]
     ANV_legend.sort_values(by=["action_num_val"])
     ANV_legend.to_csv("ANV_legend.csv")
 
-    
+    """
+
+
     #will correlate this to the ANV_legend.csv file
     single_most = (result["action_num_val"].value_counts().nlargest(1))
     single_most = (single_most[0])
