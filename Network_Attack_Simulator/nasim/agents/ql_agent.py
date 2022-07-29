@@ -377,6 +377,9 @@ class Auto_Analyze:
 
         return self.episode_seperator
     
+    def __str__(self) -> str:
+        return self.episode_seperator
+    
 
 
 
