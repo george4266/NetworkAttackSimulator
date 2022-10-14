@@ -230,11 +230,12 @@ class TabularQLearningAgent:
     def run_train_episode(self, step_limit): 
         s = self.env.reset()
         done = False
+        env_limit_reached = False
 
         steps = 0
         episode_return = 0
 
-        while not done and steps < step_limit:
+        while not done and not env_limit_reached and steps < step_limit:
             a = self.get_egreedy_action(s, self.get_epsilon())
             self.action_num_val = a
 
@@ -245,8 +246,7 @@ class TabularQLearningAgent:
                 a_verbose = self.env.action_space.get_action(a) 
             except:
                 a_verbose = -1
-
-            next_s, r, done, _ = self.env.step(a)
+            next_s, r, done, env_limit_reached = self.env.step(a)
 
             self.steps_done += 1
             td_error, s_value = self.optimize(s, a, next_s, r, done)
